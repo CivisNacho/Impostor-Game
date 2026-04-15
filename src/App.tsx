@@ -165,7 +165,7 @@ export default function App() {
     revealedToCurrent: false,
     category: 'Object',
     language: 'en',
-    theme: 'light',
+    theme: 'dark',
     customCategories: {},
   });
 
@@ -190,7 +190,7 @@ export default function App() {
           ...prev, 
           players: parsed.players || [],
           language: parsed.language || 'en',
-          theme: parsed.theme || 'light',
+          theme: parsed.theme || 'dark',
           customCategories: parsed.customCategories || {}
         }));
       } catch (e) {
@@ -377,13 +377,13 @@ export default function App() {
 
   return (
     <div className={cn(
-      "min-h-screen flex flex-col items-center p-4 font-sans transition-colors duration-300",
+      "min-h-screen flex flex-col items-center p-2 sm:p-4 font-sans transition-colors duration-300 overflow-x-hidden",
       gameState.theme === 'dark' ? "bg-[#1C1B1F] text-[#E6E1E5]" : "bg-[#FEF7FF] text-[#1D1B20]"
     )}>
-      <div className="w-full max-w-md flex flex-col gap-6">
+      <div className="w-full max-w-md flex flex-col gap-4 sm:gap-6 flex-1">
         
         {/* Header */}
-        <header className="flex flex-col items-center gap-2 mt-4 mb-2 relative">
+        <header className="flex flex-col items-center gap-1 sm:gap-2 mt-2 sm:mt-4 mb-1 sm:mb-2 relative shrink-0">
           <div className="absolute top-0 right-0 flex gap-2">
             <Button 
               variant="ghost" 
@@ -407,14 +407,14 @@ export default function App() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={cn(
-              "w-16 h-16 rounded-[20px] flex items-center justify-center shadow-lg",
+              "w-12 h-12 sm:w-16 sm:h-16 rounded-[16px] sm:rounded-[20px] flex items-center justify-center shadow-lg",
               gameState.theme === 'dark' ? "bg-[#D0BCFF]" : "bg-[#6750A4]"
             )}
           >
-            <HelpCircle className={cn("w-10 h-10", gameState.theme === 'dark' ? "text-[#381E72]" : "text-white")} />
+            <HelpCircle className={cn("w-8 h-8 sm:w-10 sm:h-10", gameState.theme === 'dark' ? "text-[#381E72]" : "text-white")} />
           </motion.div>
-          <h1 className="text-3xl font-extrabold tracking-tight font-display">{t.title}</h1>
-          <p className={cn("text-sm font-medium", gameState.theme === 'dark' ? "text-[#CAC4D0]" : "text-[#49454F]")}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-display">{t.title}</h1>
+          <p className={cn("text-xs sm:text-sm font-medium", gameState.theme === 'dark' ? "text-[#CAC4D0]" : "text-[#49454F]")}>
             {t.subtitle}
           </p>
 
@@ -445,39 +445,39 @@ export default function App() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-3 sm:gap-4 flex-1"
             >
               <Card className={cn(
-                "rounded-[28px] border-none shadow-sm",
+                "rounded-[24px] sm:rounded-[28px] border-none shadow-sm flex-1 flex flex-col",
                 gameState.theme === 'dark' ? "bg-[#2B2930]" : "bg-[#F7F2FA]"
               )}>
-                <CardHeader>
-                  <CardTitle className="text-xl font-display">{t.players}</CardTitle>
-                  <CardDescription className={gameState.theme === 'dark' ? "text-[#CAC4D0]" : ""}>
+                <CardHeader className="py-3 sm:py-6">
+                  <CardTitle className="text-lg sm:text-xl font-display">{t.players}</CardTitle>
+                  <CardDescription className={cn("text-xs sm:text-sm", gameState.theme === 'dark' ? "text-[#CAC4D0]" : "")}>
                     {t.addPlayersDesc}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                  <div className="flex gap-2">
+                <CardContent className="flex flex-col gap-3 sm:gap-4 flex-1 min-h-0">
+                  <div className="flex gap-2 shrink-0">
                     <Input 
                       placeholder={t.playerName} 
                       value={newPlayerName}
                       onChange={(e) => setNewPlayerName(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                       className={cn(
-                        "rounded-xl focus-visible:ring-[#6750A4]",
+                        "rounded-xl focus-visible:ring-[#6750A4] h-10 sm:h-12",
                         gameState.theme === 'dark' ? "bg-[#1C1B1F] border-[#938F99] text-white" : "border-[#79747E]"
                       )}
                     />
                     <Button onClick={addPlayer} className={cn(
-                      "rounded-xl",
+                      "rounded-xl h-10 sm:h-12 w-10 sm:w-12 shrink-0",
                       gameState.theme === 'dark' ? "bg-[#D0BCFF] text-[#381E72] hover:bg-[#EADDFF]" : "bg-[#6750A4] text-white hover:bg-[#5a4590]"
                     )}>
                       <UserPlus className="w-4 h-4" />
                     </Button>
                   </div>
 
-                  <ScrollArea className="h-[250px] pr-4">
+                  <ScrollArea className="flex-1 pr-4 min-h-[150px]">
                     <div className="flex flex-col gap-2">
                       {gameState.players.map((player) => (
                         <motion.div 
@@ -522,19 +522,19 @@ export default function App() {
                     </div>
                   </ScrollArea>
                 </CardContent>
-                <CardFooter className="flex flex-col gap-4">
+                <CardFooter className="flex flex-col gap-3 sm:gap-4 py-3 sm:py-6 shrink-0">
                   <div className="w-full">
                     <Label className={cn(
-                      "text-xs font-bold uppercase tracking-wider mb-2 block",
+                      "text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1 sm:mb-2 block",
                       gameState.theme === 'dark' ? "text-[#CAC4D0]" : "text-[#49454F]"
                     )}>{t.category}</Label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                       {CATEGORIES.map(cat => (
                         <button
                           key={cat}
                           onClick={() => setGameState(prev => ({ ...prev, category: cat }))}
                           className={cn(
-                            "px-1 py-2 text-[11px] font-medium rounded-xl border transition-all",
+                            "px-1 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-medium rounded-xl border transition-all",
                             gameState.category === cat 
                               ? (gameState.theme === 'dark' ? "bg-[#D0BCFF] border-[#D0BCFF] text-[#381E72]" : "bg-[#EADDFF] border-[#6750A4] text-[#21005D]")
                               : (gameState.theme === 'dark' ? "bg-[#1C1B1F] border-[#49454F] text-[#CAC4D0]" : "bg-white border-[#79747E] text-[#49454F]")
@@ -549,13 +549,13 @@ export default function App() {
                           key={cat}
                           onClick={() => setGameState(prev => ({ ...prev, category: cat }))}
                           className={cn(
-                            "px-1 py-2 text-[11px] font-medium rounded-xl border transition-all flex items-center justify-center gap-1 relative group",
+                            "px-1 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-medium rounded-xl border transition-all flex items-center justify-center gap-1 relative group",
                             gameState.category === cat 
                               ? (gameState.theme === 'dark' ? "bg-[#D0BCFF] border-[#D0BCFF] text-[#381E72]" : "bg-[#EADDFF] border-[#6750A4] text-[#21005D]")
                               : (gameState.theme === 'dark' ? "bg-[#1C1B1F] border-[#49454F] text-[#CAC4D0]" : "bg-white border-[#79747E] text-[#49454F]")
                           )}
                         >
-                          <span className="truncate max-w-[60px]">{cat}</span>
+                          <span className="truncate max-w-[50px] sm:max-w-[60px]">{cat}</span>
                           <X 
                             className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5" 
                             onClick={(e) => removeCustomCategory(cat, e)}
@@ -566,7 +566,7 @@ export default function App() {
                       <button
                         onClick={() => setIsPopupOpen(true)}
                         className={cn(
-                          "px-1 py-2 text-[11px] font-bold rounded-xl border border-dashed flex items-center justify-center gap-1",
+                          "px-1 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold rounded-xl border border-dashed flex items-center justify-center gap-1",
                           gameState.theme === 'dark' ? "bg-[#1C1B1F] border-[#D0BCFF] text-[#D0BCFF]" : "bg-white border-[#6750A4] text-[#6750A4]"
                         )}
                       >
@@ -580,7 +580,7 @@ export default function App() {
                     disabled={gameState.players.length < 3 || isLoading}
                     onClick={startGame}
                     className={cn(
-                      "w-full h-14 rounded-full text-lg font-bold shadow-md",
+                      "w-full h-12 sm:h-14 rounded-full text-base sm:text-lg font-bold shadow-md",
                       gameState.theme === 'dark' ? "bg-[#D0BCFF] text-[#381E72] hover:bg-[#EADDFF]" : "bg-[#6750A4] text-white hover:bg-[#5a4590]"
                     )}
                   >
@@ -895,9 +895,9 @@ export default function App() {
         </AnimatePresence>
 
         {/* Footer Info */}
-        <footer className="mt-auto py-8 text-center">
+        <footer className="mt-auto py-4 sm:py-8 text-center shrink-0">
           <p className={cn(
-            "text-[10px] font-medium uppercase tracking-[0.2em]",
+            "text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em]",
             gameState.theme === 'dark' ? "text-[#CAC4D0]" : "text-[#49454F]"
           )}>
             Material 3 • Local Multiplayer
