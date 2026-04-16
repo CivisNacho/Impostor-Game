@@ -33,6 +33,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Player, GameState, CATEGORIES } from './types';
 import { getSecretWord } from './services/wordService';
+import { playSound } from './services/soundService';
 import { cn } from '@/lib/utils';
 
 // Translations
@@ -256,6 +257,7 @@ export default function App() {
   }, [gameState.players, gameState.language, gameState.theme]);
 
   const addPlayer = () => {
+    playSound('click');
     const name = newPlayerName.trim();
     if (!name) return;
     
@@ -279,6 +281,7 @@ export default function App() {
   };
 
   const removePlayer = (id: string) => {
+    playSound('click');
     setGameState(prev => ({
       ...prev,
       players: prev.players.filter(p => p.id !== id)
@@ -288,6 +291,7 @@ export default function App() {
   const startGame = async () => {
     if (gameState.players.length < 3) return;
     
+    playSound('start');
     setIsLoading(true);
     const word = await getSecretWord(gameState.category, gameState.language, gameState.customCategories);
     
@@ -317,6 +321,7 @@ export default function App() {
   };
 
   const nextPlayer = () => {
+    playSound('transition');
     if (gameState.currentPlayerIndex < gameState.revealOrder.length - 1) {
       setGameState(prev => ({
         ...prev,
@@ -341,6 +346,7 @@ export default function App() {
   };
 
   const finishRound = (impostorWon: boolean) => {
+    playSound('roundEnd');
     if (impostorWon) {
       setGameState(prev => ({
         ...prev,
@@ -358,6 +364,7 @@ export default function App() {
   };
 
   const resetGame = () => {
+    playSound('click');
     setGameState(prev => ({
       ...prev,
       status: 'setup',
@@ -369,10 +376,12 @@ export default function App() {
   };
 
   const toggleLanguage = () => {
+    playSound('click');
     setGameState(prev => ({ ...prev, language: prev.language === 'en' ? 'es' : 'en' }));
   };
 
   const toggleTheme = () => {
+    playSound('click');
     setGameState(prev => ({ ...prev, theme: prev.theme === 'light' ? 'dark' : 'light' }));
   };
 
@@ -424,6 +433,12 @@ export default function App() {
   const currentPlayer = gameState.players.find(p => p.id === gameState.revealOrder[gameState.currentPlayerIndex]);
   const isImpostor = currentPlayer && gameState.impostorIds.includes(currentPlayer.id);
 
+  const getCurrentWordDisplay = () => {
+    if (!gameState.currentWord) return '';
+    if (typeof gameState.currentWord === 'string') return gameState.currentWord;
+    return (gameState.currentWord as any)[gameState.language] || (gameState.currentWord as any).en;
+  };
+
   return (
     <div className={cn(
       "min-h-screen flex flex-col items-center p-2 sm:p-4 font-sans transition-colors duration-300 overflow-x-hidden",
@@ -437,7 +452,10 @@ export default function App() {
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={() => setIsRulesOpen(true)}
+              onClick={() => {
+                playSound('click');
+                setIsRulesOpen(true);
+              }}
               className="rounded-full hover:bg-[#6750A4]/10"
             >
               <HelpCircle className="w-5 h-5 text-[#6750A4]" />
@@ -710,7 +728,7 @@ export default function App() {
                             ? (gameState.theme === 'dark' ? "text-[#F2B8B5]" : "text-[#B3261E]") 
                             : (gameState.theme === 'dark' ? "text-[#D0BCFF]" : "text-[#6750A4]")
                         )}>
-                          {isImpostor ? t.impostorMsg : gameState.currentWord}
+                          {isImpostor ? t.impostorMsg : getCurrentWordDisplay()}
                         </h3>
                         {isImpostor && (
                           <p className={cn("mt-4 text-sm italic", gameState.theme === 'dark' ? "text-[#CAC4D0]" : "text-[#49454F]")}>
@@ -814,7 +832,10 @@ export default function App() {
                 </CardContent>
                 <CardFooter className="flex flex-col gap-3">
                   <Button 
-                    onClick={() => setGameState(prev => ({ ...prev, status: 'voting' }))}
+                    onClick={() => {
+                      playSound('transition');
+                      setGameState(prev => ({ ...prev, status: 'voting' }));
+                    }}
                     className={cn(
                       "w-full h-14 rounded-full font-bold text-lg",
                       gameState.theme === 'dark' ? "bg-[#D0BCFF] text-[#381E72] hover:bg-[#EADDFF]" : "bg-[#6750A4] text-white hover:bg-[#5a4590]"
@@ -895,7 +916,7 @@ export default function App() {
                   <CardTitle className="text-3xl font-display">{t.roundOver}</CardTitle>
                   <CardDescription className={gameState.theme === 'dark' ? "text-[#CAC4D0]" : ""}>
                     {t.secretWordWas} <span className={cn("font-bold", gameState.theme === 'dark' ? "text-[#D0BCFF]" : "text-[#6750A4]")}>
-                      {gameState.currentWord}
+                      {getCurrentWordDisplay()}
                     </span>
                   </CardDescription>
                 </CardHeader>

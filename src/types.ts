@@ -7,7 +7,7 @@ export interface Player {
 export interface GameState {
   players: Player[];
   status: 'setup' | 'assigning' | 'playing' | 'voting' | 'results';
-  currentWord: string;
+  currentWord: string | { en: string; es: string };
   impostorIds: string[];
   currentPlayerIndex: number;
   revealedToCurrent: boolean;
